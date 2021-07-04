@@ -14,6 +14,7 @@ class Game {
   update(state){
     database.ref('/').update({
       gameState: state
+      
     });
   }
 
@@ -31,12 +32,16 @@ class Game {
 
     car1 = createSprite(100,200);
     car1.addImage("car1",car1_img);
+    car1.debug = "true";
     car2 = createSprite(300,200);
     car2.addImage("car2",car2_img);
+    car2.debug = "true";
     car3 = createSprite(500,200);
     car3.addImage("car3",car3_img);
+    car3.debug = "true";
     car4 = createSprite(700,200);
     car4.addImage("car4",car4_img);
+    car4.debug = "true";
     cars = [car1, car2, car3, car4];
   }
 
@@ -44,6 +49,7 @@ class Game {
     form.hide();
 
     Player.getPlayerInfo();
+    player.getCarsAtEnd();
     
     if(allPlayers !== undefined){
       //var display_position = 100;
@@ -63,16 +69,25 @@ class Game {
         index = index + 1 ;
 
         //position the cars a little away from each other in x direction
-        x = x + 200;
+        x =  200+(index*200)+allPlayers[plr].xPos;
         //use data form the database to display the cars in y direction
         y = displayHeight - allPlayers[plr].distance;
         cars[index-1].x = x;
         cars[index-1].y = y;
+        textAlign(CENTER);
+        textSize(20);
+        fill("red");
+        text(allPlayers[plr].name,cars[index-1].x,cars[index-1].y + 75);
 
         if (index === player.index){
           cars[index - 1].shapeColor = "red";
+          cars[index - 1].rotation = player.rotation;
           camera.position.x = displayWidth/2;
-          camera.position.y = cars[index-1].y
+          camera.position.y = cars[index-1].y;
+          if(cars[index-1].isTouching(obstacles)){
+            s.play();
+            yVel -= 0.9;
+          }
         }
        
         //textSize(15);
@@ -80,17 +95,41 @@ class Game {
       }
 
     }
-
-    if(keyIsDown(UP_ARROW) && player.index !== null){
-      player.distance +=10
-      player.update();
+if(player.distance < 3670){
+    if(keyIsDown(38) && player.index !== null){
+        yVel += 0.9;
+      if(keyIsDown(37)){
+        xVel -= 0.2;
+        player.rotation = -10;
+        
+      }else if(keyIsDown(39)){
+        xVel += 0.2;
+        player.rotation = 10;
+      }else{
+        player.rotation = 0;
+      }
     }
-    if(player.distance > 3860){
+    }
+    if(player.distance>3670){
       gameState = 2;
+      //game.update(2);
+      
+      player.rank += 1;
+      Player.updateCarsAtEnd(player.rank);
+
     }
-   
+    
+    player.distance+=yVel;
+    yVel*=0.98;
+    player.xPos += xVel;
+    xVel*=0.98;
+    player.update();
     drawSprites();
+  
+    
+    
   }
+  
 
   end(){
     console.log("Game Ended");
