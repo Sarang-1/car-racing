@@ -13,12 +13,12 @@ var track, car1_img, car2_img, car3_img, car4_img,obstacles,s,f;
 //var xVel,yVel;
 
 function preload(){
-  track = loadImage("../images/track.jpg");
-  car1_img = loadImage("../images/car1.png");
-  car2_img = loadImage("../images/car2.png");
-  car3_img = loadImage("../images/car3.png");
-  car4_img = loadImage("../images/car4.png");
-  ground = loadImage("../images/ground.png");
+  track = loadImage("images/track.jpg");
+  car1_img = loadImage("images/car1.png");
+  car2_img = loadImage("images/car2.png");
+  car3_img = loadImage("images/car3.png");
+  car4_img = loadImage("images/car4.png");
+  ground = loadImage("images/ground.png");
   s = loadSound("sound/sliding.mp3");
   f = loadImage("images/f1.png");
 }
